@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/onedss/ebp-gbs/app"
 	"github.com/onedss/ebp-gbs/buildtime"
 	"github.com/onedss/ebp-gbs/mylog"
 	"github.com/onedss/ebp-gbs/utils"
@@ -21,7 +22,8 @@ func main() {
 		log.SetFlags(log.LstdFlags)
 	}
 	buildtime.BuildVersion = fmt.Sprintf("%s.%s", buildtime.BuildVersion, gitCommitCode)
-	buildtime.BuildTimeStr = buildtime.BuildTime.Format(utils.DateTimeLayout)
+	buildtime.BuildTimeStr = fmt.Sprintf("<%s> %s", buildtime.BuildTime.Format(utils.DateTimeLayout), buildDateTime)
 	mylog.Info("BuildVersion:", buildtime.BuildVersion)
-	mylog.Info("BuildTimeStr:", buildtime.BuildTimeStr)
+	mylog.Info("BuildTime:", buildtime.BuildTimeStr)
+	app.StartApp()
 }
