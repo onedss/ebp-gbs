@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/common-nighthawk/go-figure"
+	"github.com/onedss/ebp-gbs/client"
 	"github.com/onedss/ebp-gbs/service"
 	"github.com/onedss/ebp-gbs/utils"
 	"log"
@@ -17,17 +18,10 @@ func StartApp() {
 		Description: sec.Key("description").MustString("EasyDarwin_Service"),
 	}
 
-	//httpPort := utils.Conf().Section("http").Key("port").MustInt(10008)
-	//sigPort := utils.Conf().Section("signaling").Key("port").MustInt(51989)
-
-	//rtspServer := rtsp.GetServer()
-	//oneHttpServer := NewOneHttpServer(httpPort)
-	//signalingServer := NewSignalingServer(sigPort)
-	//oneRtspServer := NewOneRtspServer(rtspServer.TCPPort, rtspServer)
+	httpPort := utils.Conf().Section("http").Key("port").MustInt(9000)
+	oneHttpServer := client.NewOneHttpServer(httpPort)
 	p := &application{}
-	//p.AddServer(oneHttpServer)
-	//p.AddServer(signalingServer)
-	//p.AddServer(oneRtspServer)
+	p.AddServer(oneHttpServer)
 
 	var s, err = service.New(p, svcConfig)
 	if err != nil {
