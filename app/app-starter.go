@@ -13,9 +13,9 @@ func StartApp() {
 	log.Println("ConfigFile -->", utils.ConfFile())
 	sec := utils.Conf().Section("service")
 	svcConfig := &service.Config{
-		Name:        sec.Key("name").MustString("EasyDarwin_Service"),
-		DisplayName: sec.Key("display_name").MustString("EasyDarwin_Service"),
-		Description: sec.Key("description").MustString("EasyDarwin_Service"),
+		Name:        sec.Key("name").MustString("EbpGBS_Service"),
+		DisplayName: sec.Key("display_name").MustString("EbpGBS_Service"),
+		Description: sec.Key("description").MustString("EbpGBS_Service"),
 	}
 
 	httpPort := utils.Conf().Section("http").Key("port").MustInt(9000)
