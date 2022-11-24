@@ -18,7 +18,7 @@ func StartApp() {
 		Description: sec.Key("description").MustString("EbpGBS_Service"),
 	}
 
-	httpPort := utils.Conf().Section("http").Key("port").MustInt(9000)
+	httpPort := utils.Conf().Section("http").Key("port").MustInt(11180)
 	oneHttpServer := client.NewOneHttpServer(httpPort)
 	p := &application{}
 	p.AddServer(oneHttpServer)

@@ -24,6 +24,7 @@ func NewOneHttpServer(httpPort int) (server *httpServer) {
 }
 
 func (p *httpServer) Start() (err error) {
+	p.httpStart()
 	redis_addr := "192.168.0.101:26379"
 	redis_pass := "livegbs@2019"
 	url := "http://127.0.0.1:8081/async/alarm?method=fireCameraAlarm"
@@ -71,6 +72,7 @@ func (p *httpServer) Start() (err error) {
 }
 
 func (p *httpServer) Stop() (err error) {
+	p.httpStop()
 	return nil
 }
 
@@ -124,4 +126,47 @@ func sendAlarm(alarm string, url string) {
 	//		break
 	//	}
 	//}
+}
+
+func (p *httpServer) httpStart() (err error) {
+	p.httpServer = &http.Server{
+		Addr:              fmt.Sprintf(":%d", p.httpPort),
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	http.HandleFunc("/status", myHandler)
+	link := fmt.Sprintf("http://%s:%d", utils.LocalIP(), p.httpPort)
+	log.Println("http server start -->", link)
+	go func() {
+		if err := p.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Println("start http server error", err)
+		}
+		log.Println("http server end")
+	}()
+	return
+}
+
+func (p *httpServer) httpStop() (err error) {
+	if p.httpServer == nil {
+		err = fmt.Errorf("HTTP Server Not Found")
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err = p.httpServer.Shutdown(ctx); err != nil {
+		return
+	}
+	return
+}
+
+// handler函数
+func myHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RemoteAddr, "连接成功")
+	// 请求方式：GET POST DELETE PUT UPDATE
+	fmt.Println("method:", r.Method)
+	// /go
+	fmt.Println("url:", r.URL.Path)
+	fmt.Println("header:", r.Header)
+	fmt.Println("body:", r.Body)
+	// 回复
+	w.Write([]byte("OK"))
 }
