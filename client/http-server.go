@@ -133,6 +133,7 @@ func (p *httpServer) httpStart() (err error) {
 		Addr:              fmt.Sprintf(":%d", p.httpPort),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
+	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/status", myHandler)
 	link := fmt.Sprintf("http://%s:%d", utils.LocalIP(), p.httpPort)
 	log.Println("http server start -->", link)
@@ -159,6 +160,18 @@ func (p *httpServer) httpStop() (err error) {
 }
 
 // handler函数
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RemoteAddr, "连接成功")
+	// 请求方式：GET POST DELETE PUT UPDATE
+	fmt.Println("method:", r.Method)
+	// /go
+	fmt.Println("url:", r.URL.Path)
+	fmt.Println("header:", r.Header)
+	fmt.Println("body:", r.Body)
+	// 回复
+	w.Write([]byte("Welcome"))
+}
+
 func myHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.RemoteAddr, "连接成功")
 	// 请求方式：GET POST DELETE PUT UPDATE
