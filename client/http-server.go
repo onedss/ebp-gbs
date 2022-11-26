@@ -101,7 +101,7 @@ func sendAlarm(alarm string, url string) {
 	log.Println("返回码：", resp.Status, "请求内容", alarm)
 	//fmt.Println("返回头：", resp.Header)
 	if resp.StatusCode != 200 {
-		log.Println("请求失败，返回码：", resp.StatusCode)
+		log.Println("请求失败，返回码：", resp.StatusCode, "请求地址：", url)
 		return
 	}
 
